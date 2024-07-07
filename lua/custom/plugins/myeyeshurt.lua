@@ -1,0 +1,4 @@
+return {
+    "wildfunctions/myeyeshurt",
+    opts = {}
+}

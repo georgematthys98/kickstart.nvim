@@ -114,6 +114,7 @@ return { -- LSP Configuration & Plugins
     local servers = {
       -- clangd = {},
       -- gopls = {},
+      ruff_lsp = {},
       pyright = {
         handlers = {
           ['textDocument/publishDiagnostics'] = function() end,
@@ -139,10 +140,18 @@ return { -- LSP Configuration & Plugins
       --
       -- But for many setups, the LSP (`tsserver`) will work just fine
       tsserver = {},
+      clangd = {
+        cmd = {
+          "clangd",
+          "--offset-encoding=utf-16",
+        },
+      },
       ocamllsp = {
         cmd = { 'ocamllsp' },
         filetypes = { 'ocaml', 'ocaml.menhir', 'ocaml.interface', 'ocaml.ocamllex', 'reason', 'dune' },
       },
+      zls = {},
+      svelte = {},
 
       lua_ls = {
         -- cmd = {...},
@@ -174,6 +183,7 @@ return { -- LSP Configuration & Plugins
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
       'codelldb', -- Used for debugging
+      "clangd",
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

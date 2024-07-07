@@ -4,7 +4,7 @@ return {
     local oil = require 'oil'
     oil.setup {
       keymaps = {
-        ['<C-p>'] = false,
+        ['<C-h>'] = false,
       },
     }
     vim.keymap.set('n', '-', require('oil').open, { desc = 'Open parent directory' })
