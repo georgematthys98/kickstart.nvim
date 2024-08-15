@@ -51,6 +51,7 @@ return {
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+    vim.keymap.set('n', '<F4>', dap.close, { desc = 'Debug: Stop' })
     vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
@@ -125,21 +126,19 @@ return {
     vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     for _, language in ipairs { 'typescript', 'javascript' } do
       dap.configurations[language] = {
         {
           type = 'pwa-node',
           request = 'launch',
-          name = 'Launch Current File (node)',
-          cwd = '${workspaceFolder}/optimiser',
+          name = 'Netsched',
+          cwd = '/Users/matthysgeorge/LocalDocuments/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser',
           args = function()
             local input = vim.fn.input('Arguments: ')
             return vim.split(input, " ")
           end,
-          program = '${workspaceFolder}/optimiser/dist/cli.js',
+          program = '/Users/matthysgeorge/LocalDocuments/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser/dist/cli.js',
           sourceMaps = true,
         },
       }

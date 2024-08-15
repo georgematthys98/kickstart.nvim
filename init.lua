@@ -282,6 +282,21 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      local previewers = require('telescope.previewers')
+
+      local new_maker = function(filepath, bufnr, opts)
+        opts = opts or {}
+
+        filepath = vim.fn.expand(filepath)
+        vim.loop.fs_stat(filepath, function(_, stat)
+          if not stat then return end
+          if stat.size > 100000 then
+            return
+          else
+            previewers.buffer_previewer_maker(filepath, bufnr, opts)
+          end
+        end)
+      end
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
@@ -292,7 +307,10 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
-        file_ignore_patterns = { 'node%_modules/.*', '.venv/*' },
+        defaults = {
+          buffer_previewer_maker = new_maker,
+        },
+        file_ignore_patterns = { 'node%_modules/.*', '.venv/*', 'analysis/*', '*.json'},
         pickers = { find_files = { theme = 'dropdown', previewer = false }, lsp_references = { fname_width = 100 } },
         extensions = {
           ['ui-select'] = {
@@ -328,8 +346,6 @@ require('lazy').setup({
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
-      -- It's also possible to pass additional configuration options.
-      --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
         builtin.live_grep {
           grep_open_files = true,
@@ -359,7 +375,7 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
-      format_on_save = true,
+      format_on_save = false,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -368,8 +384,9 @@ require('lazy').setup({
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         python = { 'black' },
-        javascript = { { 'prettierd', 'prettier'  } },
+        javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
+        html = { { 'prettierd', 'prettier' } },
         css = { { 'prettier' } },
         svelte = { { 'prettier', 'prettierd' } },
       },

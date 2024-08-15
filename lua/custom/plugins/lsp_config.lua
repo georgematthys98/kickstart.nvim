@@ -112,8 +112,6 @@ return { -- LSP Configuration & Plugins
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
-      -- clangd = {},
-      -- gopls = {},
       ruff_lsp = {},
       pyright = {
         handlers = {
@@ -152,6 +150,7 @@ return { -- LSP Configuration & Plugins
       },
       zls = {},
       svelte = {},
+      gopls = {},
 
       lua_ls = {
         -- cmd = {...},
