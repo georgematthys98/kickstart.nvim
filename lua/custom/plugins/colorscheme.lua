@@ -35,10 +35,17 @@ return {
     end,
   },
   {
+    'bluz71/vim-moonfly-colors',
+    init = function()
+      vim.cmd.colorscheme 'moonfly'
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
+  {
     'EdenEast/nightfox.nvim',
     init = function()
-      vim.cmd.colorscheme 'carbonfox'
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.colorscheme 'carbonfox'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
 }

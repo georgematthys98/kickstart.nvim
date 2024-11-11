@@ -1,4 +1,7 @@
 return {
+  lazy = true,  -- Enable lazy loading
+  keys = { '<F5>', '<F10>', '<F11>', '<F12>' },  -- Load on these key mappings
+  cmd = { 'DapContinue', 'DapStepOver', 'DapStepInto', 'DapToggleBreakpoint' },  -- Load on these commands
   'mfussenegger/nvim-dap',
   dependencies = {
     -- Creates a beautiful debugger UI
@@ -11,8 +14,9 @@ return {
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
     {
-      'microsoft/vscode-js-debug',
-      build = 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out',
+      "microsoft/vscode-js-debug",
+      lazy = true,
+      build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
     },
     {
       'mxsdev/nvim-dap-vscode-js',

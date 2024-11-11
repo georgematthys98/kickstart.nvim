@@ -66,6 +66,8 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+vim.opt.autoread = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -218,12 +220,17 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>w_', hidden = true },
       }
     end,
   },
@@ -281,14 +288,16 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
-      local previewers = require('telescope.previewers')
+      local previewers = require 'telescope.previewers'
 
       local new_maker = function(filepath, bufnr, opts)
         opts = opts or {}
 
         filepath = vim.fn.expand(filepath)
         vim.loop.fs_stat(filepath, function(_, stat)
-          if not stat then return end
+          if not stat then
+            return
+          end
           if stat.size > 100000 then
             return
           else
@@ -309,7 +318,7 @@ require('lazy').setup({
         defaults = {
           buffer_previewer_maker = new_maker,
         },
-        file_ignore_patterns = { 'node%_modules/.*', '.venv/*', 'analysis/*', '*.json'},
+        file_ignore_patterns = { 'node%_modules/.*', '.venv/*', 'analysis/*', '*.json' },
         pickers = { find_files = { theme = 'dropdown', previewer = false }, lsp_references = { fname_width = 100 } },
         extensions = {
           ['ui-select'] = {
@@ -366,13 +375,22 @@ require('lazy').setup({
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_fallback = true }
+          require('conform').format({ async = true, lsp_fallback = true }, function(err, did_edit)
+            if err ~= nil then
+              print('Failed with error:' .. err)
+            elseif did_edit then
+              print 'Successfully editted the file'
+            else
+              print 'No formatting required'
+            end
+          end)
         end,
         mode = '',
         desc = '[F]ormat buffer',
       },
     },
     opts = {
+      stop_after_first = true,
       notify_on_error = false,
       format_on_save = false,
       formatters_by_ft = {
@@ -383,12 +401,12 @@ require('lazy').setup({
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         python = { 'black' },
-        javascript = { { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier' } },
-        json = { { 'prettier', 'prettierd' } },
-        html = { { 'prettierd', 'prettier' } },
-        css = { { 'prettier' } },
-        svelte = { { 'prettier', 'prettierd' } },
+        javascript = { 'prettierd', 'prettier' },
+        typescript = { 'prettierd', 'prettier' },
+        json = { 'prettier', 'prettierd' },
+        html = { 'prettierd', 'prettier' },
+        css = { 'prettier' },
+        svelte = { 'prettier', 'prettierd' },
       },
     },
   },
@@ -409,7 +427,7 @@ require('lazy').setup({
           end
           return 'make install_jsregexp'
         end)(),
-        dependencies = { },
+        dependencies = {},
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -553,3 +571,8 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+local project_config = vim.fn.getcwd() .. '/.nvim.lua'
+if vim.fn.filereadable(project_config) == 1 then
+  vim.cmd('source ' .. project_config)
+end
