@@ -55,7 +55,7 @@ return {
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
-    vim.keymap.set('n', '<F4>', dap.close, { desc = 'Debug: Stop' })
+    vim.keymap.set('n', '<F4>', dap.terminate, { desc = 'Debug: Stop' })
     vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
@@ -118,7 +118,10 @@ return {
         {
           elements = { {
             id = 'repl',
-            size = 1,
+            size = 0.5,
+          }, {
+            id = 'console',
+            size = 0.5,
           } },
           position = 'bottom',
           size = 20,
