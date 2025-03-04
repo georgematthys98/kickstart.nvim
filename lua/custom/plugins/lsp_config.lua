@@ -11,9 +11,6 @@ return { -- LSP Configuration & Plugins
     -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
     { 'j-hui/fidget.nvim', opts = {} },
 
-    -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
-    -- used for completion, annotations and signatures of Neovim apis
-    { 'folke/neodev.nvim', opts = {} },
   },
   config = function()
     -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
@@ -168,6 +165,9 @@ return { -- LSP Configuration & Plugins
         },
       },
     }
+
+    -- disable autofmt for zig
+    vim.g.zig_fmt_autosave = 0
 
     -- Ensure the servers and tools above are installed
     --  To check the current status of installed tools and/or manually install

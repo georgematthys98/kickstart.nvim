@@ -25,7 +25,12 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
+
+-- Python indent from reddit comment
+-- vim.g.pyindent_open_paren = vim.opt.shiftwidth
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -105,8 +110,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 vim.keymap.set('n', '<leader>=', ':wincmd =<CR>', { desc = 'Equalize window sizes' })
 
-vim.keymap.set('n', '<c-d>', '<c-d>zz', { desc = 'Move down half a page and center' })
-vim.keymap.set('n', '<c-u>', '<c-u>zz', { desc = 'Move up half a page and center' })
+-- vim.keymap.set('n', '<c-d>', '<c-d>zz', { desc = 'Move down half a page and center' })
+-- vim.keymap.set('n', '<c-u>', '<c-u>zz', { desc = 'Move up half a page and center' })
 
 vim.keymap.set('n', '<leader>bde', function()
   local current_buf = vim.api.nvim_get_current_buf()
@@ -143,6 +148,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Auto resize splits when the terminal's window is resized
+vim.api.nvim_create_autocmd("VimResized", {
+    command = "wincmd =",
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -172,7 +182,7 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
-
+  --
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:

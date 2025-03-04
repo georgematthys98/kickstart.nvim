@@ -7,6 +7,9 @@ return {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
 
+    -- Python
+    'mfussenegger/nvim-dap-python',
+
     -- Required dependency for nvim-dap-ui
     'nvim-neotest/nvim-nio',
 
@@ -32,6 +35,7 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    require('dap-python').setup('python3')
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -72,6 +76,14 @@ return {
       end
       require('dap').continue()
     end, { desc = 'Debug: Attach' })
+
+    -- Keybinding to load launch.json from a given fp
+    vim.keymap.set('n', '<leader>dl', function()
+      local dap_vscode = require 'dap.ext.vscode'
+      local input = vim.fn.input 'Path to launch.json: '
+      dap_vscode.load_launchjs(input, { ['python'] = { 'python' } })
+      require('dap').continue()
+    end, { desc = 'Debug: Load launch.json' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|

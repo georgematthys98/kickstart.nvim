@@ -16,7 +16,11 @@ return {
       -- You can configure highlights by doing something like:
       -- vim.cmd.hi 'Comment gui=none'
     end,
-  },
+ {
+    "dgox16/oldworld.nvim",
+    lazy = false,
+    priority = 1000,
+} },
   {
     'catppuccin/nvim',
     priority = 1000,
@@ -30,15 +34,15 @@ return {
     name = 'rose-pine',
     priority = 1000,
     init = function()
-      -- vim.cmd.colorscheme 'rose-pine'
-      -- vim.cmd.hi 'Comment gui=none'
+      vim.cmd.colorscheme 'rose-pine'
+      vim.cmd.hi 'Comment gui=none'
     end,
   },
   {
     'bluz71/vim-moonfly-colors',
     init = function()
-      vim.cmd.colorscheme 'moonfly'
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.colorscheme 'moonfly'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
   {
@@ -48,4 +52,14 @@ return {
       -- vim.cmd.hi 'Comment gui=none'
     end,
   },
+  -- {
+  --   "nickkadutskyi/jb.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {},
+  --   config = function()
+  --     require("jb").setup({transparent = true})
+  --     vim.cmd("colorscheme jb")
+  --   end,
+  -- }
 }
