@@ -16,11 +16,12 @@ return {
       -- You can configure highlights by doing something like:
       -- vim.cmd.hi 'Comment gui=none'
     end,
- {
-    "dgox16/oldworld.nvim",
-    lazy = false,
-    priority = 1000,
-} },
+    {
+      'dgox16/oldworld.nvim',
+      lazy = false,
+      priority = 1000,
+    },
+  },
   {
     'catppuccin/nvim',
     priority = 1000,
@@ -34,6 +35,11 @@ return {
     name = 'rose-pine',
     priority = 1000,
     init = function()
+      require('rose-pine').setup {
+        styles = {
+          transparency = true,
+        },
+      }
       vim.cmd.colorscheme 'rose-pine'
       vim.cmd.hi 'Comment gui=none'
     end,

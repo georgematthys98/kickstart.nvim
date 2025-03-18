@@ -1,7 +1,7 @@
 return {
-  lazy = true,  -- Enable lazy loading
-  keys = { '<F5>', '<F10>', '<F11>', '<F12>' },  -- Load on these key mappings
-  cmd = { 'DapContinue', 'DapStepOver', 'DapStepInto', 'DapToggleBreakpoint' },  -- Load on these commands
+  lazy = true, -- Enable lazy loading
+  keys = { '<F5>', '<F10>', '<F11>', '<F12>' }, -- Load on these key mappings
+  cmd = { 'DapContinue', 'DapStepOver', 'DapStepInto', 'DapToggleBreakpoint' }, -- Load on these commands
   'mfussenegger/nvim-dap',
   dependencies = {
     -- Creates a beautiful debugger UI
@@ -16,26 +16,11 @@ return {
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
-    {
-      "microsoft/vscode-js-debug",
-      lazy = true,
-      build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
-    },
-    {
-      'mxsdev/nvim-dap-vscode-js',
-      config = function()
-        ---@diagnostic disable-next-line: missing-fields
-        require('dap-vscode-js').setup {
-          debugger_path = vim.fn.resolve(vim.fn.stdpath 'data' .. '/lazy/vscode-js-debug'),
-          adapters = { 'pwa-node', 'node' },
-        }
-      end,
-    },
   },
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
-    require('dap-python').setup('python3')
+    require('dap-python').setup 'python3'
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -52,10 +37,38 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
-        'js-debug-adaptor',
+        'js-debug-adapter',
         'node-debug2-adapter',
       },
     }
+
+    --- Gets a path to a package in the Mason registry.
+    --- Prefer this to `get_package`, since the package might not always be
+    --- available yet and trigger errors.
+    ---@param pkg string
+    ---@param path? string
+    local function get_pkg_path(pkg, path)
+      pcall(require, 'mason')
+      local root = vim.env.MASON or (vim.fn.stdpath('data') .. '/mason')
+      path = path or ''
+      local ret = root .. '/packages/' .. pkg .. '/' .. path
+      return ret
+    end
+
+    require('dap').adapters['pwa-node'] = {
+      type = 'server',
+      host = 'localhost',
+      port = '${port}',
+      executable = {
+        command = 'node',
+        args = {
+          get_pkg_path('js-debug-adapter', '/js-debug/src/dapDebugServer.js'),
+          '${port}',
+        },
+      },
+    }
+
+    require('dap').set_log_level 'DEBUG'
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -154,10 +167,18 @@ return {
           name = 'Netsched',
           cwd = '/Users/matthysgeorge/LocalDocuments/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser',
           args = function()
-            local input = vim.fn.input('Arguments: ')
-            return vim.split(input, " ")
+            local input = vim.fn.input 'Arguments: '
+            return vim.split(input, ' ')
           end,
           program = '/Users/matthysgeorge/LocalDocuments/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser/dist/cli.js',
+          sourceMaps = true,
+        },
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'FPP propagator',
+          cwd = '/Users/matthysgeorge/LocalDocuments/E2E_FPP_Optimiser/propagator/',
+          program = '/Users/matthysgeorge/LocalDocuments/E2E_FPP_Optimiser/propagator/dist/cli.js',
           sourceMaps = true,
         },
       }
