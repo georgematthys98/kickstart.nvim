@@ -79,6 +79,8 @@ vim.opt.autoread = true
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+-- duplicate line and comment out first
+vim.keymap.set("n", "ycc", "yygccp", { remap = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -152,6 +154,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd("VimResized", {
     command = "wincmd =",
 })
+
+vim.api.nvim_create_user_command('Google', function(o)
+  local escaped = vim.uri_encode(o.args)
+  local url = ('https://www.google.com/search?q=%s'):format(escaped)
+  vim.ui.open(url)
+end, { nargs = 1, desc = 'just google it' })
+
+vim.api.nvim_create_user_command('DuckDuckGo', function(o)
+  -- local escaped = require('socket.url').escape(o.args)
+  local escaped = vim.uri_encode(o.args)
+  local url = ('https://duckduckgo.com/?q=%s'):format(escaped)
+  vim.ui.open(url)
+end, { nargs = 1, desc = 'just google i mean duckduckgo it' })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info

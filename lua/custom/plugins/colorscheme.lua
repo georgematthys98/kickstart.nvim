@@ -40,8 +40,8 @@ return {
           transparency = true,
         },
       }
-      vim.cmd.colorscheme 'rose-pine'
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.colorscheme 'rose-pine'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
   {
@@ -58,6 +58,16 @@ return {
       -- vim.cmd.hi 'Comment gui=none'
     end,
   },
+
+  {
+    'sainnhe/sonokai',
+    init = function()
+      vim.cmd.colorscheme 'sonokai'
+      vim.cmd.hi 'Comment gui=none'
+    end,
+
+  },
+
   -- {
   --   "nickkadutskyi/jb.nvim",
   --   lazy = false,

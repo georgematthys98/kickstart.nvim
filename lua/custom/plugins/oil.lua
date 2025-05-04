@@ -8,6 +8,9 @@ return {
         ['<C-l>'] = false,
       },
       skip_confirm_for_simple_edits = true,
+      buf_options = {
+        buflisted = true
+      }
     }
     vim.keymap.set('n', '-', require('oil').open, { desc = 'Open parent directory' })
     vim.keymap.set('n', '<leader>.', require('oil').toggle_hidden, { desc = 'Toggle hidden files' })

@@ -4,6 +4,16 @@ return {
     vim.keymap.set('n', '<leader>dvo', function() require("diffview").open(vim.fn.input("DiffviewOpen ")) end, { noremap = true, silent = true })
     vim.keymap.set("n", "<leader>dvc", "<cmd>DiffviewClose<cr>", { noremap = true, silent = true })
     require('diffview').setup({
+      use_icons = true,
+      view = {
+        merge_tool = {
+          layout = "diff3_mixed"
+        },
+        default = {
+          layout = "diff2_horizontal",
+        }
+      },
+      enhanced_diff_hl = true,
       hooks = {
         view_opened = function(view)
           vim.cmd("setlocal foldmethod=manual")  -- Disable folds by setting manual folding

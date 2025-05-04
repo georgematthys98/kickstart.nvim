@@ -16,7 +16,14 @@ return {
     scroll = { enabled = true },
     statuscolumn = { enabled = true },
     words = { enabled = true },
-    picker = { enabled = true, layout = 'vscode' },
+    picker = {
+      enabled = true,
+      layout = 'vscode',
+      jump = { reuse_win = false },
+      main = {
+        current = true,
+      }
+    },
   },
   keys = {
     {
@@ -29,7 +36,7 @@ return {
     {
       '<leader>/',
       function()
-        Snacks.picker.grep()
+        Snacks.picker.grep_buffers()
       end,
       desc = 'Grep',
     },
@@ -74,9 +81,9 @@ return {
     {
       '<leader><leader>',
       function()
-        Snacks.picker.recent()
+        Snacks.picker.smart()
       end,
-      desc = 'Recent',
+      desc = 'Smart picker',
     },
     -- git
     {
@@ -111,7 +118,7 @@ return {
     {
       '<leader>sg',
       function()
-        Snacks.picker.grep()
+        Snacks.picker.grep( { layout = "default" } )
       end,
       desc = 'Grep',
     },
@@ -193,7 +200,7 @@ return {
     {
       'gr',
       function()
-        Snacks.picker.lsp_references()
+        Snacks.picker.lsp_references({ layout = "default" })
       end,
       nowait = true,
       desc = 'References',
@@ -218,6 +225,13 @@ return {
         Snacks.picker.lsp_symbols()
       end,
       desc = 'LSP Symbols',
+    },
+    {
+      '<leader>nh',
+      function()
+        Snacks.notifier.show_history()
+      end,
+      desc = 'Notification history',
     },
   },
 }

@@ -39,6 +39,7 @@ return {
         'delve',
         'js-debug-adapter',
         'node-debug2-adapter',
+        'debugpy'
       },
     }
 
@@ -165,20 +166,20 @@ return {
           type = 'pwa-node',
           request = 'launch',
           name = 'Netsched',
-          cwd = '/Users/matthysgeorge/LocalDocuments/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser',
+          cwd = '/Users/matthysgeorge/local/projects/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser',
           args = function()
             local input = vim.fn.input 'Arguments: '
             return vim.split(input, ' ')
           end,
-          program = '/Users/matthysgeorge/LocalDocuments/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser/dist/cli.js',
+          program = '/Users/matthysgeorge/local/projects/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser/dist/cli.js',
           sourceMaps = true,
         },
         {
           type = 'pwa-node',
           request = 'launch',
           name = 'FPP propagator',
-          cwd = '/Users/matthysgeorge/LocalDocuments/E2E_FPP_Optimiser/propagator/',
-          program = '/Users/matthysgeorge/LocalDocuments/E2E_FPP_Optimiser/propagator/dist/cli.js',
+          cwd = '/Users/matthysgeorge/local/projects/E2E_FPP_Optimiser/propagator/',
+          program = '/Users/matthysgeorge/local/projects/E2E_FPP_Optimiser/propagator/dist/cli.js',
           sourceMaps = true,
         },
       }

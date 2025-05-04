@@ -4,7 +4,7 @@ return { -- Highlight, edit, and navigate code
   opts = {
     ensure_installed = { 'bash', 'c', 'cpp', 'css', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'python', 'rust', 'typescript', 'jsdoc', 'sql' },
     -- Autoinstall languages that are not installed
-    auto_install = true,
+    auto_install = false,
     highlight = {
       enable = true,
       -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
