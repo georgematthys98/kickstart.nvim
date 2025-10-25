@@ -1,5 +1,6 @@
 return { -- LSP Configuration & Plugins
   'neovim/nvim-lspconfig',
+  event = 'VeryLazy',
   dependencies = {
     -- Automatically install LSPs and related tools to stdpath for Neovim
     'williamboman/mason.nvim',
@@ -7,6 +8,7 @@ return { -- LSP Configuration & Plugins
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     'ray-x/lsp_signature.nvim',
     'Hoffs/omnisharp-extended-lsp.nvim',
+    'nvim-telescope/telescope.nvim',
 
     -- Useful status updates for LSP.
     -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -79,6 +81,17 @@ return { -- LSP Configuration & Plugins
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+        -- Only show errors for basedpyright, hide warnings
+        if client and client.name == 'basedpyright' then
+          vim.diagnostic.config({
+            severity_sort = true,
+            virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+            signs = { severity = { min = vim.diagnostic.severity.ERROR } },
+            underline = { severity = { min = vim.diagnostic.severity.ERROR } },
+          }, vim.lsp.diagnostic.get_namespace(client.id))
+        end
+
         if client and client.server_capabilities.documentHighlightProvider then
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
@@ -101,7 +114,7 @@ return { -- LSP Configuration & Plugins
     capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
     local pid = vim.fn.getpid()
-    local omnisharp_bin = "/Users/matthysgeorge/.local/share/omnisharp-roslyn/OmniSharp.dll"
+    local omnisharp_bin = '/Users/matthysgeorge/.local/share/omnisharp-roslyn/OmniSharp.dll'
 
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.:h
@@ -114,26 +127,43 @@ return { -- LSP Configuration & Plugins
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
       ruff = {},
-      pyright = {
-        handlers = {
-          ['textDocument/publishDiagnostics'] = function() end,
-        },
+      basedpyright = {
         settings = {
-          pyright = {
-            disableOrganizeImports = true,
+          analysis = {
+            logLevel = 'Error',
           },
-          python = {
+          basedpyright = {
             analysis = {
               autoSearchPaths = true,
               typeCheckingMode = 'basic',
               useLibraryCodeForTypes = true,
+              logLevel = 'Error',
+              disableOrganizeImports = true,
+              diagnosticMode = 'workspace', -- or "openFilesOnly"
             },
           },
         },
       },
+      -- pyright = {
+      --   handlers = {
+      --     ['textDocument/publishDiagnostics'] = function() end,
+      --   },
+      --   settings = {
+      --     pyright = {
+      --       disableOrganizeImports = true,
+      --     },
+      --     python = {
+      --       analysis = {
+      --         autoSearchPaths = true,
+      --         typeCheckingMode = 'basic',
+      --         useLibraryCodeForTypes = true,
+      --       },
+      --     },
+      --   },
+      -- },
 
       omnisharp = {
-        cmd = { "dotnet", omnisharp_bin, "--languageserver", "--hostPID", tostring(pid) },
+        cmd = { 'dotnet', omnisharp_bin, '--languageserver', '--hostPID', tostring(pid) },
         -- cmd = {
         --   'omnisharp-mono',
         --   '--languageserver',
@@ -190,7 +220,6 @@ return { -- LSP Configuration & Plugins
       --    https://github.com/pmizio/typescript-tools.nvim
       --
       -- But for many setups, the LSP (`tsserver`) will work just fine
-      ts_ls = {},
       clangd = {
         cmd = {
           'clangd',
@@ -256,5 +285,5 @@ return { -- LSP Configuration & Plugins
         end,
       },
     }
-  end,
+ end,
 }

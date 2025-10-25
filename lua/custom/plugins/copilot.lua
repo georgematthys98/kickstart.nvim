@@ -1,5 +1,6 @@
 return {
   'github/copilot.vim',
+  cmd = {"Copilot enable"},
   config = function()
     vim.keymap.set('n', '<leader>ghe', '<cmd>Copilot enable<cr>', { desc = '[E]nable Copilot' })
     vim.keymap.set('n', '<leader>ghd', '<cmd>Copilot disable<cr>', { desc = '[D]isable Copilot' })

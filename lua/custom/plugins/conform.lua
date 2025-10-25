@@ -40,5 +40,10 @@ return { -- Autoformat
       svelte = { 'prettier', 'prettierd' },
       toml = { 'taplo' },
     },
+    formatters = {
+      black = {
+        -- prepend_args = { "--line-length", "79" },  -- example: custom line length
+      },
+    },
   },
 }

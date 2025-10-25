@@ -39,7 +39,7 @@ return {
         'delve',
         'js-debug-adapter',
         'node-debug2-adapter',
-        'debugpy'
+        'debugpy',
       },
     }
 
@@ -50,7 +50,7 @@ return {
     ---@param path? string
     local function get_pkg_path(pkg, path)
       pcall(require, 'mason')
-      local root = vim.env.MASON or (vim.fn.stdpath('data') .. '/mason')
+      local root = vim.env.MASON or (vim.fn.stdpath 'data' .. '/mason')
       path = path or ''
       local ret = root .. '/packages/' .. pkg .. '/' .. path
       return ret
@@ -79,7 +79,16 @@ return {
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
     vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
     vim.keymap.set('n', '<leader>B', function()
-      dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      vim.ui.input({ prompt = 'Breakpoint condition: ' }, function(cond)
+        if cond == nil then
+          return
+        end -- user <Esc> or cancelled
+        if cond == '' then
+          dap.set_breakpoint() -- plain breakpoint
+        else
+          dap.set_breakpoint(cond) -- conditional breakpoint
+        end
+      end)
     end, { desc = 'Debug: Set Breakpoint' })
     vim.keymap.set('n', '<leader>da', function()
       if vim.fn.filereadable '.vscode/launch.json' then
@@ -91,6 +100,38 @@ return {
       require('dap').continue()
     end, { desc = 'Debug: Attach' })
 
+    vim.keymap.set('v', '<leader>de', function()
+      local dap = require 'dap'
+
+      -- Get start and end positions of visual selection
+      local start_pos = vim.fn.getpos 'v'
+      local end_pos = vim.fn.getpos '.'
+      local start_line, start_col = start_pos[2], start_pos[3]
+      local end_line, end_col = end_pos[2], end_pos[3]
+
+      -- Normalize (ensure start <= end)
+      if start_line > end_line or (start_line == end_line and start_col > end_col) then
+        start_line, end_line = end_line, start_line
+        start_col, end_col = end_col, start_col
+      end
+
+      local lines = vim.fn.getline(start_line, end_line)
+
+      if #lines == 0 then
+        return
+      end
+
+      -- Trim lines to selected columns
+      lines[1] = string.sub(lines[1], start_col, -1)
+      lines[#lines] = string.sub(lines[#lines], 1, end_col)
+
+      local cleaned_code = table
+        .concat(lines, '\n')
+        :gsub('^%s+', '') -- trim leading ws
+        :gsub('%s+$', '') -- trim trailing ws
+
+      dap.repl.execute(cleaned_code)
+    end, { desc = 'Evaluate exact visual selection in REPL' })
     -- Keybinding to load launch.json from a given fp
     vim.keymap.set('n', '<leader>dl', function()
       local dap_vscode = require 'dap.ext.vscode'
@@ -126,29 +167,18 @@ return {
         {
           elements = {
             {
-              id = 'scopes',
-              size = 0.25,
+              id = 'repl',
+              size = 0.5,
             },
             {
-              id = 'breakpoints',
-              size = 0.25,
+              id = 'console',
+              size = 0.3,
             },
             {
               id = 'stacks',
-              size = 0.50,
+              size = 0.2,
             },
           },
-          position = 'left',
-          size = 40,
-        },
-        {
-          elements = { {
-            id = 'repl',
-            size = 0.5,
-          }, {
-            id = 'console',
-            size = 0.5,
-          } },
           position = 'bottom',
           size = 20,
         },
@@ -172,14 +202,6 @@ return {
             return vim.split(input, ' ')
           end,
           program = '/Users/matthysgeorge/local/projects/E2E-FSP-Inload-PocBackend/opti/netsched/optimiser/dist/cli.js',
-          sourceMaps = true,
-        },
-        {
-          type = 'pwa-node',
-          request = 'launch',
-          name = 'FPP propagator',
-          cwd = '/Users/matthysgeorge/local/projects/E2E_FPP_Optimiser/propagator/',
-          program = '/Users/matthysgeorge/local/projects/E2E_FPP_Optimiser/propagator/dist/cli.js',
           sourceMaps = true,
         },
       }

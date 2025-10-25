@@ -11,7 +11,6 @@ return {
     dashboard = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
-    notifier = { enabled = true },
     quickfile = { enabled = true },
     scroll = { enabled = true },
     statuscolumn = { enabled = true },
@@ -36,7 +35,7 @@ return {
     {
       '<leader>/',
       function()
-        Snacks.picker.grep_buffers()
+        Snacks.picker.lines()
       end,
       desc = 'Grep',
     },
