@@ -11,7 +11,7 @@ return {
     dashboard = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
-    quickfile = { enabled = true },
+    quickfile = { enabled = false },
     scroll = { enabled = true },
     statuscolumn = { enabled = true },
     words = { enabled = true },
@@ -65,6 +65,13 @@ return {
       '<leader>sf',
       function()
         Snacks.picker.files()
+      end,
+      desc = 'Find Files',
+    },
+    {
+      '<leader>s.',
+      function()
+        Snacks.picker.files({ hidden=true })
       end,
       desc = 'Find Files',
     },

@@ -39,10 +39,17 @@ return { -- Autoformat
       css = { 'prettier' },
       svelte = { 'prettier', 'prettierd' },
       toml = { 'taplo' },
+      racket = { 'raco_fmt' },
+      scheme = { 'raco_fmt' },
     },
     formatters = {
       black = {
         -- prepend_args = { "--line-length", "79" },  -- example: custom line length
+      },
+      raco_fmt = {
+        command = 'raco',
+        args = { 'fmt', "-i", '$FILENAME' },
+        stdin = false,
       },
     },
   },
