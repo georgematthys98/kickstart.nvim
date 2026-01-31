@@ -239,5 +239,19 @@ return {
       end,
       desc = 'Notification history',
     },
+    {
+      '<leader>cd',
+      function()
+        Snacks.picker.git_log({
+          confirm = function(picker, item)
+            picker:close()
+            if item then
+              vim.cmd('CodeDiff ' .. item.commit)
+            end
+          end,
+        })
+      end,
+      desc = 'CodeDiff with commit',
+    },
   },
 }
